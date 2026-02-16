@@ -1,40 +1,33 @@
 import os
-import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-TOKEN = os.getenv("BOT_TOKEN")
+# Получаем токен из Railway Variables
+TOKEN = os.environ.get("BOT_TOKEN")
 
-logging.basicConfig(level=logging.INFO)
-
-PRODUCT_LIST = [
-    "Курица",
-    "Индейка",
-    "Рис",
-    "Гречка",
-    "Красная рыба",
-    "Молоко безлактозное"
-]
+# ===== КОМАНДЫ =====
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Привет 💛 Я твой Biedronka-бот.\n\n"
-        "Команды:\n"
-        "/spisok — показать список\n"
-        "/akcje — акции (демо)\n"
-        "/budzet — бюджет\n"
-        "/kiedy_isc — когда идти в магазин"
+        "Привет 👋\n\n"
+        "Я бот Biedronka.\n"
+        "Используй команды:\n"
+        "/spisok\n"
+        "/akcje\n"
+        "/budzet"
     )
 
 async def spisok(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = "Твой список продуктов:\n\n"
-    for item in PRODUCT_LIST:
+    product_list = ["Молоко", "Хлеб", "Яйца"]
+    text = "🛒 Твой список продуктов:\n\n"
+    for item in product_list:
         text += f"• {item}\n"
+
     await update.message.reply_text(text)
 
 async def akcje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "🔥 Акции недели (демо версия):\n\n"
+        "🔥 Акции недели (демо):\n\n"
         "Курица — 8,99 zł\n"
         "Красная рыба — 27,99 zł\n"
         "Рис — без акции"
@@ -42,15 +35,12 @@ async def akcje(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def budzet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "💰 Бюджет (демо):\n"
+        "💰 Бюджет (демо):\n\n"
         "Потрачено: 0 zł\n"
         "Экономия: 0 zł"
     )
 
-async def kiedy_isc(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "🛒 Лучше идти в четверг — больше всего акций."
-    )
+# ===== ЗАПУСК =====
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
@@ -59,7 +49,6 @@ def main():
     app.add_handler(CommandHandler("spisok", spisok))
     app.add_handler(CommandHandler("akcje", akcje))
     app.add_handler(CommandHandler("budzet", budzet))
-    app.add_handler(CommandHandler("kiedy_isc", kiedy_isc))
 
     app.run_polling()
 

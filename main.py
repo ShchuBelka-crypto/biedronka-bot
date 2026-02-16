@@ -1,19 +1,16 @@
 import os
-import threading
-from flask import Flask
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-app = Flask(__name__)
+TOKEN = os.environ.get("BOT_TOKEN")
 
-@app.route("/")
-def home():
-    return "Bot is running"
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Бот работает 🚀")
 
-def run_web():
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+def main():
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.run_polling()
 
-# Запускаем веб-сервер в отдельном потоке
-threading.Thread(target=run_web).start()
-
-# ⬇️ Здесь твой запуск бота
-bot.polling(none_stop=True)
+if __name__ == "__main__":
+    main()

@@ -41,14 +41,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/budzet"
     )
 
-async def spisok(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    product_list = ["Молоко", "Хлеб", "Яйца"]
-    text = "🛒 Твой список продуктов:\n\n"
-    for item in product_list:
-        text += f"• {item}\n"
+async def spisok(update: Update, context):
+    text = "🛒 Твой список продуктов на месяц:\n\n"
+
+    for category, items in PRODUCTS.items():
+        text += f"\n📦 {category}:\n"
+        for name, amount in items.items():
+            text += f"• {name} — {amount}\n"
 
     await update.message.reply_text(text)
-
 async def akcje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🔥 Акции недели (демо):\n\n"
